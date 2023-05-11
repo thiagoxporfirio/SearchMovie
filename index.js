@@ -4,22 +4,28 @@ let result = document.getElementById("result")
 
 let getMovie = () => {
     let movieName = movieNameRef.value
-    let url = `http://www.omdbapi.com/?t=${movieName}&apikey${key}`
+    let url = `http://www.omdbapi.com/?t=${movieName}&apikey=${key}`;
 
 
+    movieNameRef.addEventListener("input", function(){
+
+        if(movieName.length <= 2 ){
+            result.innerHTML = ` `
+
+        }
+
+    })
 
     if(movieName.length <= 0 ){
         result.innerHTML = `<h3 class="msg">Por favor coloque o nome do filme<h3>`
-    }
-    else{
-        fetch(url)
-            .then((resp) => {
-                resp.json()
-            }).then((data) => {
 
-                if(data.response == "true"){
-                    result.innerHTML = `
-                    
+      
+    }
+    else {
+        fetch(url).then((resp) => resp.json()).then((data) => {
+            //if movie exist in database
+            if (data.Response == "True") {
+                result.innerHTML = `
                     <div class="info">
                         <img src=${data.Poster} class="poster">
                         <div>
@@ -40,14 +46,15 @@ let getMovie = () => {
                     </div>
                     <h3>Plot:</h3>
                     <p>${data.Plot}</p>
-                        <h3>Cast:</h3>
+                    <h3>Cast:</h3>
                     <p>${data.Actors}</p>
-                    `
-                }
+                `;
+            }
+
 
                 else{
                     result.innerHTML = `
-                        <h3 class="msg" > Ocorreu um erro :( <h3>
+                        <h3 class="msg" > Nada encontrado :( <h3>
                     `
                 }
             })
@@ -59,7 +66,6 @@ movieNameRef.addEventListener("keyup", function (event) {
       event.preventDefault();
       searchBtn.click();
     }
-
 
 });
 
